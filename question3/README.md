@@ -8,7 +8,17 @@ After you have completed that task, please download final3.zip from the Download
 
 ### Answer
 
+Query
 ````
-
+db.messages.update(
+    {
+        'headers.Message-ID': '<8147308.1075851042335.JavaMail.evans@thyme>'
+    },
+    {
+        $push: {
+            'headers.To': 'mrpotatohead@mongodb.com'
+        }
+    }
+)
 ````
 
