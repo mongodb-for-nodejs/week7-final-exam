@@ -49,7 +49,48 @@ Hint: you might consider creating an index or two or your program will take a lo
 
 ### Answer
 
+Import both collections
+
 ````
-* Set w=0, j=0 on writes
+mongoimport -d gallery -c albums < albums.json
 ````
+
+````
+mongoimport -d gallery -c images < images.json
+````
+
+Count kittens
+
+````
+db.images.count({
+    tags: { $in: ['kittens'] }
+})
+````
+
+Result: 49932
+
+
+Remove all orphans
+
+````
+db.albums.ensureIndex({
+    images: 1
+});
+
+db.images.find().forEach(function (image) {
+    if (db.albums.count({images: { $in: [image._id]} }) == 0) {
+        db.images.remove({ _id: image._id });
+    }
+})
+````
+
+Count kittens again
+
+````
+db.images.count({
+    tags: { $in: ['kittens'] }
+})
+````
+
+Result: 44822
 
